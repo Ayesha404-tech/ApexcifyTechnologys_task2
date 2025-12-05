@@ -2,7 +2,7 @@
 
 A Python Flask web application to track stock investments and calculate total portfolio value.
 
-## Setup
+## 🚀 Setup
 
 1. Install dependencies:
    ```bash
@@ -16,8 +16,9 @@ A Python Flask web application to track stock investments and calculate total po
 
 3. Open your browser and go to `http://localhost:5000`
 
-## Features
+## ✨ Features
 
+### Core Features
 - Add stocks with quantities
 - Automatic calculation of total investment value
 - View portfolio breakdown in a table
