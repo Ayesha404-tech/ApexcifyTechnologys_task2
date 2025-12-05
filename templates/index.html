@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-field label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-field input {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-field input:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3182ce;
+            color: white;
+            grid-column: 3;
+            align-self: flex-end;
+        }
+
+        .btn-primary:hover {
+            background: #2c5aa0;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .info-box {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            color: #2c5aa0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f7fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .symbol {
+            font-weight: 600;
+            color: #3182ce;
+        }
+
+        .delete-btn {
+            background: #fc8181;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #f56565;
+        }
+
+        .delete-btn:active {
+            transform: scale(0.95);
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .total-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3182ce;
+        }
+
+        .export-btn {
+            background: #38a169;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-btn:hover {
+            background: #2f855a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #718096;
+        }
+
+        .empty-state svg {
+            width: 4rem;
+            height: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-primary {
+                grid-column: auto;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .total-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Stock Portfolio Tracker</h1>
+            <p>Track your investments and calculate total portfolio value</p>
+        </div>
+
+        <div class="card">
+            <h2>Add Stock to Portfolio</h2>
+            <div class="error-message" id="errorMessage"></div>
+            <form onsubmit="addStock(event)">
+                <div class="form-group">
+                    <div class="form-field">
+                        <label for="symbol">Stock Symbol</label>
+                        <input type="text" id="symbol" placeholder="e.g., AAPL" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" placeholder="e.g., 10" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Stock</button>
+                </div>
+            </form>
+            <div class="info-box">
+                <strong>Available Stocks:</strong> AAPL, TSLA, GOOGL, MSFT, AMZN, META, NVDA, NFLX, AMD, INTC
+            </div>
+        </div>
+
+        <div id="portfolioContainer"></div>
+    </div>
+
+    <script>
+        let portfolio = [];
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 4000);
+        }
+
+        function addStock(event) {
+            event.preventDefault();
+            const symbol = document.getElementById('symbol').value.toUpperCase().trim();
+            const quantity = parseFloat(document.getElementById('quantity').value);
+
+            if (!symbol || quantity <= 0) {
+                showError('Please enter valid stock symbol and quantity');
+                return;
+            }
+
+            fetch('/api/add-stock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ symbol, quantity })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                portfolio.push({
+                    id: Date.now(),
+                    ...data
+                });
+                document.getElementById('symbol').value = '';
+                document.getElementById('quantity').value = '';
+                renderPortfolio();
+            })
+            .catch(error => {
+                showError(error.message);
+            });
+        }
+
+        function removeStock(id) {
+            portfolio = portfolio.filter(stock => stock.id !== id);
+            renderPortfolio();
+        }
+
+        function calculateTotal() {
+            return portfolio.reduce((total, stock) => total + stock.total_value, 0);
+        }
+
+        function exportCSV() {
+            fetch('/api/export-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stocks: portfolio })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `portfolio_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            });
+        }
+
+        function renderPortfolio() {
+            const container = document.getElementById('portfolioContainer');
+
+            if (portfolio.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                            <h3>No stocks in your portfolio</h3>
+                            <p>Add your first stock to start tracking your investments</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>Your Portfolio</h2>
+                        <button class="btn export-btn" onclick="exportCSV()">📥 Export CSV</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Stock Symbol</th>
+                                    <th>Quantity</th>
+                                    <th>Price/Share</th>
+                                    <th>Total Value</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            portfolio.forEach(stock => {
+                html += `
+                    <tr>
+                        <td><span class="symbol">${stock.symbol}</span></td>
+                        <td>${stock.quantity}</td>
+                        <td>$${stock.price.toFixed(2)}</td>
+                        <td><strong>$${stock.total_value.toFixed(2)}</strong></td>
+                        <td>
+                            <button class="delete-btn" onclick="removeStock(${stock.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="total-section">
+                        <span class="total-label">Total Portfolio Value:</span>
+                        <span class="total-value">$${calculateTotal().toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        renderPortfolio();
+    </script>
+</body>
+</html>
