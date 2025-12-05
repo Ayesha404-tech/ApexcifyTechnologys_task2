@@ -39,4 +39,5 @@ Available stocks with hardcoded prices:
 - NFLX: $450
 - AMD: $120
 - INTC: $45
-"# ApexcifyTechnologys_task2" 
+  
+# ApexcifyTechnologys_task2 
